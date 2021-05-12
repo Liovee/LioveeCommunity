@@ -176,12 +176,12 @@ export default {
     };
   },
   created() {
-    this.getMenuList();
-    this.activePath = window.sessionStorage.getItem("activePath");
+    //this.getMenuList();
+    //this.activePath = window.sessionStorage.getItem("activePath");
   },
   methods: {
     logout: function () {
-      window.sessionStorage.clear();
+      //window.sessionStorage.clear();
       this.$router.push("/login");
     },
 

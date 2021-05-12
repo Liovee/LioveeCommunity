@@ -6,21 +6,20 @@
       <el-breadcrumb-item>个人信息</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
-      <div>姓名 性别 年龄 家庭住址 电话号码 身份证号</div>
       <div class="marginB">
         <el-row :gutter="20">
           <el-col :span="12"
-            ><div class="grid-content bg-purple">姓名:</div></el-col
+            ><div class="grid-content bg-purple">姓名:{{personalMessage.userName}}</div></el-col
           >
           <el-col :span="12"
-            ><div class="grid-content bg-purple">性别:</div></el-col
+            ><div class="grid-content bg-purple">性别:{{addForm.radio==1?'男':'女'}}</div></el-col
           >
         </el-row>
       </div>
       <div class="marginB">
         <el-row :gutter="20">
           <el-col :span="12"
-            ><div class="grid-content bg-purple">电话号码:</div></el-col
+            ><div class="grid-content bg-purple">电话号码:{{personalMessage.phoneNum}}</div></el-col
           >
           <el-col :span="12"
             ><div class="grid-content bg-purple">身份证号:</div></el-col
@@ -30,10 +29,10 @@
       <div class="marginB">
         <el-row :gutter="20">
           <el-col :span="12"
-            ><div class="grid-content bg-purple">年龄:</div></el-col
+            ><div class="grid-content bg-purple">出生日期:</div></el-col
           >
           <el-col :span="12"
-            ><div class="grid-content bg-purple">家庭住址:</div></el-col
+            ><div class="grid-content bg-purple">家庭住址:{{personalMessage.homeAddress}}</div></el-col
           >
         </el-row>
       </div>
@@ -50,27 +49,27 @@
         label-width="70px"
       >
         <el-form-item label="姓名" prop="username">
-          <el-input v-model="addForm.username"></el-input>
+          <el-input v-model="addForm.userName"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="password">
           <el-radio v-model="addForm.radio" label="1">boy</el-radio>
           <el-radio v-model="addForm.radio" label="2">girl</el-radio>
         </el-form-item>
         <el-form-item label="电话号码" >
-          <el-input v-model="addForm.email"></el-input>
+          <el-input v-model="addForm.phoneNum"></el-input>
         </el-form-item>
         <el-form-item label="身份证号" >
-          <el-input v-model="addForm.mobile"></el-input>
+          <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" >
-          <el-input></el-input>
+        <el-form-item label="出生日期" >
+          <el-input v-model="addForm.birth"></el-input>
         </el-form-item>
         <el-form-item label="家庭住址">
-          <el-input></el-input>
+          <el-input v-model="addForm.homeAddress"></el-input>
         </el-form-item>
         <!-- 底部区域 -->
           <el-button @click="addDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addDialogVisible = false"
+          <el-button type="primary" @click="toModified"
             >确 定</el-button
           >
       </el-form>
@@ -78,16 +77,20 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
+      personalMessage:{},
       addDialogVisible: false,
       addForm: {
-        username: "",
+        idCard:"",
+        birth:"",
+        homeAddress:"",
+        userName: "",
         password: "",
-        email: "",
         mobile: "",
-        radio:"1"
+        radio:""
       },
       addFormRules: {
         username: [
@@ -109,6 +112,32 @@ export default {
       },
     };
   },
+  methods:{
+    async getUserInfo(){
+      const res = await axios.get("/user/selectNowUser")
+      console.log(res)
+      localStorage.setItem('userId',res.data.data.userId)
+      this.personalMessage = res.data.data
+    },
+    async toModified(){
+      this.addDialogVisible = false
+      var userId = localStorage.getItem('userId')
+      var userEntity = {
+        "idCard":this.addForm.idCard,
+        "birth":this.addForm.birth,
+        "userId":userId,
+        "homeAddress":this.addForm.homeAddress,
+        "userName":this.addForm.userName,
+        "phoneNum":this.addForm.mobile
+      }
+      const res = await axios.post("/user/updateUser",userEntity )
+      this.getUserInfo();
+      console.log(res)
+    }
+  },
+  created(){
+    this.getUserInfo()
+  }
 };
 </script>
 <style scoped>

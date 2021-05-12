@@ -12,6 +12,7 @@
         <el-table-column label="电话号码" prop="email"> </el-table-column>
         <el-table-column label="反馈类型" prop="username"> </el-table-column>
         <el-table-column label="反馈时间" prop="username"> </el-table-column>
+        <el-table-column label="反馈详情" prop="username"> </el-table-column>
         </el-table>
         <div style="width: 600px; height: 500px" ref="chart"></div>
     </el-card>
@@ -31,7 +32,7 @@ export default {
       let myChart = echarts.init(this.$refs.chart);
       // 绘制图表
       myChart.setOption({
-        title: { text: "请求分析可视化;数据是近三个月或者五个月内 九种不同标签的个数" },
+        title: { text: "请求分析可视化;数据是近六个月内 九种不同标签的个数" },
         tooltip: {},
         xAxis: {
           data: ["2021-1", "2021-2", "2021-3", "2021-4", "2021-5", "2021-6"],

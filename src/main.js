@@ -11,8 +11,8 @@ import './assets/fonts/iconfont.css'
 Vue.prototype.$message = Message
 Vue.prototype.$http = axios
 // axios.defaults.baseURL = 'http://shop.liulongbin.top/api/private/v1/'
-axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
-
+axios.defaults.baseURL = 'http://localhost:9000/sysin'
+axios.defaults.withCredentials = true;
 //axios请求拦截
 axios.interceptors.request.use(config =>{
   config.headers.Authorization = window.sessionStorage.getItem('token')

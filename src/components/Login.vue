@@ -12,9 +12,9 @@
           :model="loginForm"
         >
           <!--用户名 -->
-          <el-form-item prop="username">
+          <el-form-item prop="phoneNum">
             <el-input
-              v-model="loginForm.username"
+              v-model="loginForm.phoneNum"
               prefix-icon="el-icon-user-solid"
             ></el-input>
           </el-form-item>
@@ -42,13 +42,12 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: '123456'
+        phoneNum: "",
+        password: ""
       },
       loginFormRules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur' }
+        phoneNum: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -61,19 +60,19 @@ export default {
     resetLogin: function () {
       this.$refs.loginFormRef.resetFields();
     },
-    login: function () {
-      this.$refs.loginFormRef.validate(async (valid) => {
-        if (!valid) {
-          return false;
-        }
-        const { data: res } = await axios.post("login", this.loginForm);
-        if (res.meta.status !== 200) {
-          return this.$message.error("登陆失败");
-        }
-        this.$message.success("登陆成功");
+    async login() {
+      // this.$refs.loginFormRef.validate(async (valid) => {
+      //   if (!valid) {
+      //     return false;
+      //   }
+      //   const { data: res } = await axios.post("login", this.loginForm);
+      //   if (res.meta.status !== 200) {
+      //     return this.$message.error("登陆失败");
+      //   }
+      //   this.$message.success("登陆成功");
 
-        window.sessionStorage.setItem("token", res.data.token);
-        this.$router.push("/home")
+      //   window.sessionStorage.setItem("token", res.data.token);
+      //   this.$router.push("/home")
         //    console.log(data)
         // axios.post('/login',this.loginForm)
         // .then(function(resolve){
@@ -82,7 +81,15 @@ export default {
         // .then(function(reject){
         //     console.log(reject)
         // })
-      });
+      //});
+    const res = await axios.post("http://localhost:9000/sysin/user/userLogin",this.loginForm)
+    if(res.data.data=="登录成功"){
+      this.$message.success("登陆成功")
+      this.$router.push("/welcome")
+    }else{
+       this.$message.error("登陆失败")
+    }
+    console.log(res)
     },
     VLogin: function () {
       this.$router.push('/About')
